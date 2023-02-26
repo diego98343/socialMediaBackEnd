@@ -1,10 +1,17 @@
 import {Application, json, urlencoded, Response, Request, NextFunction} from 'express';
+
 import http from 'http'
-import cors from'cors';
-import helmet from 'helmet'
-import hpp from 'hpp';
-import cookierSession from 'cookie-session';
+import cors from 'cors'
+import helmet from 'helmet';
+import hpp from 'hpp'
+import cookierSession from 'cookie-session'
 import HTTP_STATUS from 'http-status-codes';
+import 'express-async-errors';
+
+
+// import hpp from 'hpp';
+// import cookierSession from 'cookie-session';
+
 
 
 // sudo npm i --save @types/express install for the imports to work 
@@ -27,7 +34,29 @@ export class chattyService{
         this.startServer(this.app)
     }
 
-    private secutiryMiddleware(app:Application):void{}
+    private secutiryMiddleware(app:Application):void{
+        app.use(
+            cookierSession({
+                name:'session',
+                keys: ['test1','test2'],
+                maxAge: 24 * 7 *360000,
+                secure: false
+            })
+        );
+        
+        app.use(hpp());
+        app.use(helmet());
+        app.use(
+            cors({
+                origin:'*',
+                credentials: true,
+                optionsSuccessStatus:200,
+                methods:['GET','POST','PUT','DELETE','OPTIONS']
+            })   
+        )
+    }
+
+    
 
     private standardMiddleware(app:Application):void{}
 
