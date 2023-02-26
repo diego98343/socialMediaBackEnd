@@ -1,6 +1,15 @@
 import {Application, json, urlencoded, Response, Request, NextFunction} from 'express';
 import http from 'http'
-//sudo npm i --save @types/express install for the imports to work 
+import cors from'cors';
+import helmet from 'helmet'
+import hpp from 'hpp';
+import cookierSession from 'cookie-session';
+import HTTP_STATUS from 'http-status-codes';
+
+
+// sudo npm i --save @types/express install for the imports to work 
+// sudo npm cors helmet hpp cookie-session compression express-async-errors http-status-codes install to store information in cookies 
+
 export class chattyService{
 
     private app: Application;
@@ -16,7 +25,6 @@ export class chattyService{
         this.routeMiddleware(this.app);
         this.globalErrorHandler(this.app);
         this.startServer(this.app)
-
     }
 
     private secutiryMiddleware(app:Application):void{}
