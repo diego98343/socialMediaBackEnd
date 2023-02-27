@@ -15,7 +15,7 @@ import compression from 'compression'
 // sudo npm cors helmet hpp cookie-session compression express-async-errors http-status-codes install to store information in cookies 
 
 
-const SERVER_PORT =5000;
+const SERVER_PORT =6000;
 
 export class chattyServer{
 
