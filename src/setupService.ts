@@ -7,19 +7,21 @@ import hpp from 'hpp'
 import cookierSession from 'cookie-session'
 import HTTP_STATUS from 'http-status-codes';
 import 'express-async-errors';
-
-
-// import hpp from 'hpp';
-// import cookierSession from 'cookie-session';
+import compression from 'compression'
 
 
 
 // sudo npm i --save @types/express install for the imports to work 
 // sudo npm cors helmet hpp cookie-session compression express-async-errors http-status-codes install to store information in cookies 
 
-export class chattyService{
+
+const SERVER_PORT =5000;
+
+export class chattyServer{
+
 
     private app: Application;
+
 
     constructor(app:Application){
         this.app =app;
@@ -33,6 +35,7 @@ export class chattyService{
         this.globalErrorHandler(this.app);
         this.startServer(this.app)
     }
+    
 
     private secutiryMiddleware(app:Application):void{
         app.use(
@@ -56,19 +59,41 @@ export class chattyService{
         )
     }
 
-    
 
-    private standardMiddleware(app:Application):void{}
+
+    private standardMiddleware(app:Application):void{
+        app.use(compression());
+        app.use(json({limit:'50mb'}));
+        app.use(urlencoded({extended: true, limit:'50mb'}))
+    }
+
+   
 
     private routeMiddleware(app:Application):void{}
 
     private globalErrorHandler(app:Application):void{}
 
-    private startServer(app:Application):void{}
 
     private createSocketID(httpServer:http.Server):void{}
 
-    private startHttpServer(httpServer:http.Server): void{}
+
+
+
+    private startHttpServer(httpServer:http.Server): void{
+        httpServer.listen(SERVER_PORT, ()=>{
+            console.log('server running on port '+ SERVER_PORT)
+        });
+    }
+
+
+    private async startServer(app:Application):Promise<void>{   
+        try{
+            const httpServer: http.Server = new http.Server(app);
+            this.startHttpServer(httpServer);
+        }catch(error){
+            console.log(error);
+        }
+    }
 
 
 }
