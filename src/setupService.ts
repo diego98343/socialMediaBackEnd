@@ -9,7 +9,11 @@ import HTTP_STATUS from 'http-status-codes';
 import 'express-async-errors';
 import compression from 'compression'
 import { config } from './config';
+import { Server } from 'socket.io';
 
+//brew install redis
+import {createClient} from 'redis'
+import {createAdapter} from '@socket.io/redis-adapter'
 
 
 // sudo npm i --save @types/express install for the imports to work 
@@ -35,6 +39,8 @@ export class chattyServer{
         this.routeMiddleware(this.app);
         this.globalErrorHandler(this.app);
         this.startServer(this.app)
+
+ 
     }
     
 
@@ -72,29 +78,55 @@ export class chattyServer{
 
     private routeMiddleware(app:Application):void{}
 
+
     private globalErrorHandler(app:Application):void{}
 
 
-    private createSocketID(httpServer:http.Server):void{}
 
+
+    private async createSocketID(httpServer:http.Server):Promise<Server>{
+
+        const io: Server =new Server(httpServer,{
+            cors:{
+                origin:config.CLIENT_URL,
+                methods:['GET','POST','PUT','DELETE','OPTIONS']
+            }
+        });
+
+        const pubClient = createClient({url:config.REDIS_HOST});
+        const subCient = pubClient.duplicate();
+
+        await Promise.all([pubClient.connect(),subCient.connect()]);
+        io.adapter(createAdapter(pubClient,subCient));
+        return io;
+    }
 
 
 
     private startHttpServer(httpServer:http.Server): void{
+
+        console.log(`Server has started with process${process.pid}`)
+
         httpServer.listen(SERVER_PORT, ()=>{
             console.log('server running on port '+ SERVER_PORT)
         });
     }
 
 
+
     private async startServer(app:Application):Promise<void>{   
         try{
             const httpServer: http.Server = new http.Server(app);
+            const socketOP:Server = await this.createSocketID(httpServer);
+
             this.startHttpServer(httpServer);
+            this.socketIOConnections(socketOP);
         }catch(error){
             console.log(error);
         }
     }
 
+
+    private socketIOConnections(io:Server):void{ }
 
 }
