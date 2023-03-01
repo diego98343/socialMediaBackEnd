@@ -14,6 +14,8 @@ import { Server } from 'socket.io';
 //brew install redis
 import {createClient} from 'redis'
 import {createAdapter} from '@socket.io/redis-adapter'
+//routes import 
+import applicationRoutes from  './routes'
 
 
 // sudo npm i --save @types/express install for the imports to work 
@@ -76,10 +78,14 @@ export class chattyServer{
 
    
 
-    private routeMiddleware(app:Application):void{}
+    private routeMiddleware(app:Application):void{
+        applicationRoutes(app);
+    }
 
 
-    private globalErrorHandler(app:Application):void{}
+    private globalErrorHandler(app:Application):void{
+        
+    }
 
 
 
