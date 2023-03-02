@@ -1,4 +1,4 @@
-import {Application, json, urlencoded, Response, Request, NextFunction} from 'express';
+import {Application, json, urlencoded, Response, Request, NextFunction, request} from 'express';
 
 import http from 'http'
 import cors from 'cors'
@@ -16,6 +16,7 @@ import {createClient} from 'redis'
 import {createAdapter} from '@socket.io/redis-adapter'
 //routes import 
 import applicationRoutes from  './routes'
+import { CustomError, IErrorResponse } from './shared/globals/helpers/error-handlers';
 
 
 // sudo npm i --save @types/express install for the imports to work 
@@ -84,7 +85,18 @@ export class chattyServer{
 
 
     private globalErrorHandler(app:Application):void{
-        
+        //to catch error that are not available
+        app.all('*',(req:Request,res:Response)=>{
+            res.status(HTTP_STATUS.NOT_FOUND).json({message: `${req.originalUrl} not found`})
+        });
+
+        app.use((error: IErrorResponse,req:Request,res:Response,next:NextFunction)=>{
+            console.log(error);
+            if(error instanceof CustomError){
+                return res.status(error.statusCode).json(error.serializeErrors());
+            }
+            next();
+        })
     }
 
 
