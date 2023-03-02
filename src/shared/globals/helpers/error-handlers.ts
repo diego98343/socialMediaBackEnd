@@ -36,6 +36,8 @@ export abstract class CustomError extends Error{
 
 }
 
+
+
 export class JoinRequestValidationError extends CustomError{
     statusCode = HTTP_STATUS.BAD_REQUEST;
     status='error'

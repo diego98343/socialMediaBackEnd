@@ -11,6 +11,8 @@ import compression from 'compression'
 import { config } from './config';
 import { Server } from 'socket.io';
 
+//loger import to replace console.log
+import Logger from 'bunyan'
 //brew install redis
 import {createClient} from 'redis'
 import {createAdapter} from '@socket.io/redis-adapter'
@@ -24,6 +26,7 @@ import { CustomError, IErrorResponse } from './shared/globals/helpers/error-hand
 
 
 const SERVER_PORT =6000;
+const log:Logger = config.createLogger('server')
 
 export class chattyServer{
 
@@ -42,8 +45,6 @@ export class chattyServer{
         this.routeMiddleware(this.app);
         this.globalErrorHandler(this.app);
         this.startServer(this.app)
-
- 
     }
     
 
@@ -91,7 +92,7 @@ export class chattyServer{
         });
 
         app.use((error: IErrorResponse,req:Request,res:Response,next:NextFunction)=>{
-            console.log(error);
+            log.error(error);
             if(error instanceof CustomError){
                 return res.status(error.statusCode).json(error.serializeErrors());
             }
@@ -123,10 +124,10 @@ export class chattyServer{
 
     private startHttpServer(httpServer:http.Server): void{
 
-        console.log(`Server has started with process${process.pid}`)
+        log.info(`Server has started with process${process.pid}`)
 
         httpServer.listen(SERVER_PORT, ()=>{
-            console.log('server running on port '+ SERVER_PORT)
+            log.info('server running on port '+ SERVER_PORT)
         });
     }
 
@@ -140,7 +141,7 @@ export class chattyServer{
             this.startHttpServer(httpServer);
             this.socketIOConnections(socketOP);
         }catch(error){
-            console.log(error);
+            log.error(error);
         }
     }
 

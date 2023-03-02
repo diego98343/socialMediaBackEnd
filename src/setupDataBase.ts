@@ -1,17 +1,22 @@
 
+//use to connect databse
 import mongoose from "mongoose";
+//use get configuration
 import {config} from './config'
+//replace console.log import
+import Logger from 'bunyan';
 
+const log: Logger = config.createLogger('setupDatabase');
 
 export default ()=>{
 
    const connect = ()=>{
        mongoose.connect(config.DATABASE_URL)
        .then(() =>{
-        console.log('successfully connected to data base')
+        log.info('successfully connected to data base')
        })
        .catch((error)=>{
-         console.log('Error connecting to database',error);
+         log.error('Error connecting to database',error);
          return process.exit(1);
        });
    };
