@@ -1,0 +1,8 @@
+{
+  "trailingComma":"none",
+  "tabWidth": 2,
+  "semi":true,
+  "sigleQuote": true,
+  "bracketSpacing": true,
+  "printWidth":140
+}
