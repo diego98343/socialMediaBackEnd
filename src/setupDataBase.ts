@@ -1,7 +1,7 @@
 //use to connect databse
 import mongoose from 'mongoose';
 //use get configuration
-import { config } from './config';
+import { config } from '@root/config';
 //replace console.log import
 import Logger from 'bunyan';
 

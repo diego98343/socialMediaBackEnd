@@ -18,6 +18,23 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "pretty": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+
+
+    //npm i ttypescript
+    //npm i typescript-transform-paths
+    //we need to add transform in pluggings to change the paths
+
+    "plugins":[
+      { "transform": "typescript-transform-paths"},
+      { "transform": "typescript-transform-paths","afterDeclarations":true}
+    ],
+    "paths":{
+      "@global/*:":["src/shared/globals/*"],
+      "@service/*:":["src/shared/services/*"],
+      "@sockets/*:":["src/shared/sockets/*"],
+      "@workers/*:":["src/shared/workers/*"],
+      "@root/*":["src/*"],
+    }
   }
 }

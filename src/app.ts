@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
-import { chattyServer } from './setupService';
-import databaseConnection from './setupDataBase';
-import { config } from './config';
+import { chattyServer } from '@root/setupService';
+import databaseConnection from '@root/setupDataBase';
+import { config } from '@root/config';
 
 //sudo npm install --save-dev tsconfig-paths    to change import paths
 class Application {
