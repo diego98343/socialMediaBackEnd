@@ -20,7 +20,7 @@
     "pretty": true,
     "resolveJsonModule": true,
 
-
+     //npm install typescript -g
     //npm i ttypescript
     //npm i typescript-transform-paths
     //we need to add transform in pluggings to change the paths
